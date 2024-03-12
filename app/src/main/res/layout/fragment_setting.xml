@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/setting_background"
+    tools:context=".setting.SettingFragment">
+
+    <TextView
+        android:id="@+id/locationTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/setting_style"
+        android:text="@string/location"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/languageTV"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/languageTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/setting_style"
+        android:text="@string/language"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/locationTV"
+        app:layout_constraintTop_toTopOf="@+id/locationTV" />
+
+    <RadioGroup
+        android:id="@+id/locationRG"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/setting_style"
+        android:checkedButton="@+id/radio_button_1"
+        app:layout_constraintEnd_toEndOf="@+id/locationTV"
+        app:layout_constraintStart_toStartOf="@+id/locationTV"
+        app:layout_constraintTop_toBottomOf="@+id/locationTV">
+
+        <RadioButton
+            android:id="@+id/gpsRB"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:text="@string/gps"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:id="@+id/mapRB"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:text="@string/map"
+            android:textColor="@color/black" />
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/languageRG"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/setting_style"
+        android:checkedButton="@+id/radio_button_1"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/languageTV"
+        app:layout_constraintStart_toStartOf="@+id/languageTV"
+        app:layout_constraintTop_toBottomOf="@+id/languageTV">
+
+        <RadioButton
+            android:id="@+id/englishRB"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:text="@string/english"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:id="@+id/arabicRB"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:text="@string/arabic"
+            android:textColor="@color/black" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/windTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/setting_style"
+        android:text="@string/wind_speed"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/locationRG"
+        app:layout_constraintEnd_toStartOf="@+id/temperatureTV"/>
+
+    <RadioGroup
+        android:id="@+id/windSpeedRG"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/setting_style"
+        android:checkedButton="@+id/radio_button_1"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/windTV"
+        app:layout_constraintStart_toStartOf="@+id/windTV"
+        app:layout_constraintTop_toBottomOf="@+id/windTV">
+
+        <RadioButton
+            android:id="@+id/meterRB"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:text="@string/meter_sec"
+            android:textColor="@color/black"/>
+
+
+        <RadioButton
+            android:id="@+id/mileRB"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:text="@string/mile_hour"
+            android:textColor="@color/black" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/temperatureTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/setting_style"
+        android:text="@string/temperature"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/windTV"
+        app:layout_constraintTop_toBottomOf="@+id/languageRG" />
+
+    <RadioGroup
+        android:id="@+id/temperatureRG"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/setting_style"
+        android:checkedButton="@+id/radio_button_1"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/temperatureTV"
+        app:layout_constraintStart_toStartOf="@+id/temperatureTV"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureTV">
+
+        <RadioButton
+            android:id="@+id/celsiusRB"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:text="@string/celsius"
+            android:textColor="@color/black"/>
+
+        <RadioButton
+            android:id="@+id/fahrenheitRB"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:text="@string/fahrenheit"
+            android:textColor="@color/black"/>
+
+        <RadioButton
+            android:id="@+id/kelvinRB"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/white"
+            android:text="@string/kelvin"
+            android:textColor="@color/black"/>
+    </RadioGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

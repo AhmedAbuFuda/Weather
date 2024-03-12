@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">الطقس</string>
+    <string name="home">الصفحة الرئيسية</string>
+    <string name="favorite">التفضيلات</string>
+    <string name="alert">التنبيهات</string>
+    <string name="setting">الاعدادات</string>
+
+    <string name="location">الموقع</string>
+    <string name="language">اللغة</string>
+    <string name="gps">تحديد المواقع</string>
+    <string name="map">الخريطة</string>
+    <string name="english">الانجليزية</string>
+    <string name="arabic">العربية</string>
+    <string name="wind_speed">سرعة الرياح</string>
+    <string name="temperature">درجة الحرارة</string>
+    <string name="meter_sec">متر/ثانية</string>
+    <string name="mile_hour">ميل/ساعة</string>
+    <string name="celsius">سليزيس</string>
+    <string name="fahrenheit">فهرنهايت</string>
+    <string name="kelvin">كيلفن</string>
+</resources>

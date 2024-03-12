@@ -25,4 +25,9 @@ class SplashActivity : AppCompatActivity() {
             startActivity(intent)
         }, 3500)
     }
+
+    override fun onPause() {
+        super.onPause()
+        finish()
+    }
 }
