@@ -13,8 +13,8 @@
     <string name="arabic">Arabic</string>
     <string name="wind_speed">Wind Speed</string>
     <string name="temperature">Temperature</string>
-    <string name="meter_sec">m/s</string>
-    <string name="mile_hour">mi/h</string>
+    <string name="meter_sec">Meter/Sec</string>
+    <string name="mile_hour">Mile/Hour</string>
     <string name="celsius">Celsius</string>
     <string name="fahrenheit">Fahrenheit</string>
     <string name="kelvin">Kelvin</string>
@@ -23,4 +23,5 @@
     <string name="cloud">Cloud</string>
     <string name="ultraviolet">Ultraviolet</string>
     <string name="visibility">Visibility</string>
+    <string name="wind">Wind</string>
 </resources>
