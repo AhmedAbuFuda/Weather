@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background"
-    tools:context=".Home.HomeFragment">
+    tools:context=".Home.view.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,7 +21,8 @@
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textSize="28sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="44dp"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/temperatureTV"
@@ -64,6 +66,7 @@
             android:id="@+id/weatherImage"
             android:layout_width="110dp"
             android:layout_height="110dp"
+            android:scaleType="fitXY"
             app:layout_constraintEnd_toStartOf="@+id/descriptionTV"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/temperatureTV" />
@@ -99,7 +102,7 @@
                     android:id="@+id/hourlyTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="24-hour forecast"
+                    android:text="3-hour forecast"
                     android:textColor="@color/white"
                     android:textSize="22sp"
                     android:textStyle="bold"
@@ -119,7 +122,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/hourlyTV"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:itemCount="10"
+                    tools:itemCount="8"
                     tools:listitem="@layout/hour_item"
                     tools:orientation="horizontal" />
 
@@ -157,7 +160,7 @@
                     android:id="@+id/weakTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="7-day forecast"
+                    android:text="5-day forecast"
                     android:textColor="@color/white"
                     android:textSize="22sp"
                     android:textStyle="bold"
@@ -177,7 +180,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/weakTV"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:itemCount="7"
+                    tools:itemCount="5"
                     tools:listitem="@layout/weak_item"
                     tools:orientation="vertical" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -187,6 +190,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:layout_marginBottom="25dp"
             app:cardElevation="4dp"
             app:cardMaxElevation="6dp"
             app:cardCornerRadius="10dp"
@@ -240,6 +244,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/pressureImage"
                     app:layout_constraintStart_toStartOf="@+id/pressureImage"
                     app:layout_constraintTop_toBottomOf="@+id/pressureImage" />
@@ -250,8 +257,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/pressure"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/pressureTv"
                     app:layout_constraintStart_toStartOf="@+id/pressureTv"
                     app:layout_constraintTop_toBottomOf="@+id/pressureTv" />
@@ -271,6 +279,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/humidityImage"
                     app:layout_constraintStart_toStartOf="@+id/humidityImage"
                     app:layout_constraintTop_toBottomOf="@+id/humidityImage" />
@@ -281,8 +292,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/humidity"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/humidityTv"
                     app:layout_constraintStart_toStartOf="@+id/humidityTv"
                     app:layout_constraintTop_toBottomOf="@+id/humidityTv" />
@@ -302,6 +314,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/windImage"
                     app:layout_constraintStart_toStartOf="@+id/windImage"
                     app:layout_constraintTop_toBottomOf="@+id/windImage" />
@@ -312,8 +327,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/wind"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/windTv"
                     app:layout_constraintStart_toStartOf="@+id/windTv"
                     app:layout_constraintTop_toBottomOf="@+id/windTv" />
@@ -333,6 +349,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/cloudImage"
                     app:layout_constraintStart_toStartOf="@+id/cloudImage"
                     app:layout_constraintTop_toBottomOf="@+id/cloudImage" />
@@ -344,8 +363,9 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="@string/cloud"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/cloudTv"
                     app:layout_constraintStart_toStartOf="@+id/cloudTv"
                     app:layout_constraintTop_toBottomOf="@+id/cloudTv" />
@@ -365,6 +385,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/ultravioletImage"
                     app:layout_constraintStart_toStartOf="@+id/ultravioletImage"
                     app:layout_constraintTop_toBottomOf="@+id/ultravioletImage" />
@@ -376,8 +399,9 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="@string/ultraviolet"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/ultravioletTv"
                     app:layout_constraintStart_toStartOf="@+id/ultravioletTv"
                     app:layout_constraintTop_toBottomOf="@+id/ultravioletTv" />
@@ -397,6 +421,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/visibilityImage"
                     app:layout_constraintStart_toStartOf="@+id/visibilityImage"
                     app:layout_constraintTop_toBottomOf="@+id/visibilityImage" />
@@ -408,8 +435,9 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="@string/visibility"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/visibilityTv"
                     app:layout_constraintStart_toStartOf="@+id/visibilityTv"
                     app:layout_constraintTop_toBottomOf="@+id/visibilityTv" />
