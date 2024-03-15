@@ -375,7 +375,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="32dp"
-                    android:src="@drawable/ultraviolet"
+                    android:src="@drawable/maxmin"
                     app:layout_constraintEnd_toEndOf="@+id/humidityView"
                     app:layout_constraintStart_toStartOf="@+id/humidityView"
                     app:layout_constraintTop_toBottomOf="@+id/humidityView" />
@@ -398,7 +398,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/ultraviolet"
+                    android:text="@string/max_min"
                     android:textSize="18sp"
                     android:textColor="@color/white"
                     android:textStyle="bold"

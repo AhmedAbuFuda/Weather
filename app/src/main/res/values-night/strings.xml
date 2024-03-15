@@ -23,4 +23,5 @@
     <string name="ultraviolet">Ultraviolet</string>
     <string name="visibility">Visibility</string>
     <string name="wind">Wind</string>
+    <string name="max_min">Max / Min</string>
 </resources>

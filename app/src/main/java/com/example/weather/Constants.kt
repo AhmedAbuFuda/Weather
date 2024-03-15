@@ -7,6 +7,7 @@ import java.util.Locale
 object Constants {
     const val API_KEY = "e6c8bada64ea5356977e8966ec825784"
     const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
+    const val REQUEST_CODE = 5005
 }
 
 fun getCurrentTime(dt : Long) : String{
