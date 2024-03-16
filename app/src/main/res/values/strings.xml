@@ -25,4 +25,7 @@
     <string name="visibility">Visibility</string>
     <string name="wind">Wind</string>
     <string name="max_min">Max / Min</string>
+    <string name="my_apikey">AIzaSyD6mQanVxLrWT9GKHpE57LWq6RKot0-ksg</string>
+    <string name="save">Save</string>
+    <string name="dropped_pin">Dropped Pin</string>
 </resources>

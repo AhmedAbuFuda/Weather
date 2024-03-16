@@ -26,4 +26,7 @@
     <string name="visibility">الرؤية</string>
     <string name="wind">الرياح</string>
     <string name="max_min">Max / Min</string>
+    <string name="my_apikey">AIzaSyD6mQanVxLrWT9GKHpE57LWq6RKot0-ksg</string>
+    <string name="save">حـفـظ</string>
+    <string name="dropped_pin">Dropped Pin</string>
 </resources>
