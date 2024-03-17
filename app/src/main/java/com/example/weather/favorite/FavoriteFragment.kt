@@ -34,8 +34,11 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.favFab.setOnClickListener {
             if (checkNetwork(requireContext())) {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, MapFragment()).commit()
+                val fragment = MapFragment()
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.fragment_container, fragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
             } else {
                 Toast.makeText(requireContext(),"Internet Connection", Toast.LENGTH_SHORT).show()
             }

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weather.R
 import com.example.weather.databinding.FragmentFavoriteBinding
@@ -48,32 +49,33 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
 
-        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+        binding.mapSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                var location = binding.search.query.toString()
-                var addressList : List<Address> = listOf()
-
-                if (location != null){
-                    var geocoder = Geocoder(requireContext())
+                val location: String = binding.mapSearch.query.toString()
+                var addressList: List<Address>? = null
+                if (!location.isNullOrEmpty()) {
+                    val geocoder = Geocoder(requireContext())
                     try {
-                        addressList = geocoder.getFromLocationName(location,1)!!
-                    }catch (e : IOException){
+                        addressList = geocoder.getFromLocationName(location, 1)
+                    } catch (e: IOException) {
                         e.printStackTrace()
                     }
-                    var address : Address = addressList[0]
-                    latLng = LatLng(address.latitude,address.latitude)
-                    map.apply {
-                        addMarker(
-                            MarkerOptions()
-                                .position(latLng)
-                                .title(location)
+                    val address = addressList?.firstOrNull()
+                    if (address != null) {
+                        val latLng = LatLng(address.latitude, address.longitude)
+                        map.addMarker(
+                            MarkerOptions().position(latLng).title(location)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                         )
-                        animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10F))
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10F))
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Location not found",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                    binding.save.visibility = View.VISIBLE
                 }
                 return false
             }
@@ -84,7 +86,11 @@ class MapFragment : Fragment() , OnMapReadyCallback {
 
         })
 
+        mapFragment.getMapAsync(this)
+
         binding.save.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, FavoriteFragment()).commit()
             Log.i("TAG", "onViewCreated: "+ (marker?.position?.latitude))
             Log.i("TAG", "onViewCreated: "+ (marker?.position?.longitude))
             Log.i("TAG", "onViewCreated: "+ (marker?.title))
