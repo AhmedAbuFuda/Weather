@@ -28,7 +28,7 @@ class WeatherRepositoryImp private constructor(
         longitude: Double,
         units: String?,
         lang: String?
-    ): WeatherResponse {
-        return weatherRemoteDataSource.getWeatherOverNetwork(latitude,longitude,units,lang)
+    ): Flow<WeatherResponse> {
+        return flowOf(weatherRemoteDataSource.getWeatherOverNetwork(latitude,longitude,units,lang))
     }
 }

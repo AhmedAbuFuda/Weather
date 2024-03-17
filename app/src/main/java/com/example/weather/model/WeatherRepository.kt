@@ -8,5 +8,5 @@ interface WeatherRepository {
         longitude: Double,
         units: String?,
         lang: String?)
-    : WeatherResponse
+    : Flow<WeatherResponse>
 }

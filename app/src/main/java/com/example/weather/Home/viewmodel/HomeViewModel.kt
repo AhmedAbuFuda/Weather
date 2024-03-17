@@ -4,14 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weather.model.APIState
 import com.example.weather.model.WeatherRepository
 import com.example.weather.model.WeatherResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class HomeViewModel( private val repo : WeatherRepository) : ViewModel() {
-    private var _weather: MutableLiveData<WeatherResponse> = MutableLiveData<WeatherResponse>()
-    val weather: LiveData<WeatherResponse> = _weather
+     var weather: MutableStateFlow<APIState> = MutableStateFlow<APIState>(APIState.Loading)
 
      fun getWeather(
         latitude: Double,
@@ -20,7 +22,9 @@ class HomeViewModel( private val repo : WeatherRepository) : ViewModel() {
         lang: String?
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            _weather.postValue(repo.getWeatherFromApi(latitude, longitude, units, lang))
+            repo.getWeatherFromApi(latitude, longitude, units, lang).collect{
+                weather.value = APIState.Success(it)
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -26,6 +27,7 @@ import com.example.weather.Home.viewmodel.HomeViewModelFactory
 import com.example.weather.databinding.FragmentHomeBinding
 import com.example.weather.db.WeatherLocalDataSourceImp
 import com.example.weather.getCurrentTime
+import com.example.weather.model.APIState
 import com.example.weather.model.WeatherRepositoryImp
 import com.example.weather.model.WeatherResponse
 import com.example.weather.network.WeatherRemoteDataSourceImp
@@ -35,6 +37,8 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlin.math.log
 
 class HomeFragment : Fragment() {
@@ -135,11 +139,31 @@ class HomeFragment : Fragment() {
                     super.onLocationResult(locationResult)
                     val location = locationResult.lastLocation
                     viewModel.getWeather(location?.latitude!!,location?.longitude!!,"metric","en")
-                    viewModel.weather.observe(viewLifecycleOwner) { value ->
+                    lifecycleScope.launch {
+                        viewModel.weather.collectLatest {result ->
+                            when(result){
+                                is APIState.Loading ->{
+                                    Log.i("loading", "Loading: ")
+                                }
+
+                                is APIState.Success ->{
+                                    drawScreen(result.data)
+                                    hourAdapter.submitList(result.data.list.subList(0,8))
+                                    dayAdapter.submitList(result.data.list.chunked(8))
+                                }
+
+                                else ->{
+                                    Log.i("Error", "Error: ")
+                                }
+                            }
+
+                        }
+                    }
+                    /*viewModel.weather.observe(viewLifecycleOwner) { value ->
                         drawScreen(value)
                         hourAdapter.submitList(value.list.subList(0,8))
                         dayAdapter.submitList(value.list.chunked(8))
-                    }
+                    }*/
                     fusedLocationProviderClient.removeLocationUpdates(this);
                 }
             },
