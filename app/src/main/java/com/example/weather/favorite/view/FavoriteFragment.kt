@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +31,7 @@ import com.example.weather.model.FavoriteWeather
 import com.example.weather.model.PlaceDBState
 import com.example.weather.model.WeatherRepositoryImp
 import com.example.weather.network.WeatherRemoteDataSourceImp
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -76,10 +78,15 @@ class FavoriteFragment : Fragment(), FavoriteClickListener {
             viewModel.favoriteDB.collectLatest {result ->
                 when(result){
                     is PlaceDBState.Loading ->{
-                        Log.i("loading", "Loading: ")
+                        binding.favoriteAnimation.visibility= View.VISIBLE
+                        binding.favRV.visibility = View.GONE
+                        binding.favFab.visibility = View.GONE
                     }
-
                     is PlaceDBState.Success ->{
+                        delay(3000)
+                        binding.favoriteAnimation.visibility= View.GONE
+                        binding.favRV.visibility = View.VISIBLE
+                        binding.favFab.visibility = View.VISIBLE
                         favoriteAdapter.submitList(result.data)
                     }
 
@@ -171,7 +178,13 @@ class FavoriteFragment : Fragment(), FavoriteClickListener {
     }
 
     override fun onClickDelete(id : Int) {
-        viewModel.deleteFavoritePlace(id)
-        Log.i("delete", "onClickDelete: $id ")
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.title))
+            .setMessage(getString(R.string.message))
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                viewModel.deleteFavoritePlace(id)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 }

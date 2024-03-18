@@ -28,4 +28,6 @@
     <string name="my_apikey">AIzaSyD6mQanVxLrWT9GKHpE57LWq6RKot0-ksg</string>
     <string name="save">Save</string>
     <string name="dropped_pin">Dropped Pin</string>
+    <string name="title">Delete Favorite</string>
+    <string name="message">Are you sure you want to delete this favorite?</string>
 </resources>
