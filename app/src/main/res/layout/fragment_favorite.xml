@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background"
-    tools:context=".favorite.FavoriteFragment">
+    tools:context=".favorite.view.FavoriteFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favRV"
