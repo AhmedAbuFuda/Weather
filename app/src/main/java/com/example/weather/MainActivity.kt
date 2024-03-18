@@ -10,7 +10,7 @@ import androidx.core.view.GravityCompat
 import com.example.weather.Home.view.HomeFragment
 import com.example.weather.alert.AlertFragment
 import com.example.weather.databinding.ActivityMainBinding
-import com.example.weather.favorite.FavoriteFragment
+import com.example.weather.favorite.view.FavoriteFragment
 import com.example.weather.setting.SettingFragment
 import com.google.android.material.navigation.NavigationView
 
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_home -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, HomeFragment()).commit()
             R.id.nav_favorite -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container,FavoriteFragment()).commit()
+                .replace(R.id.fragment_container, FavoriteFragment()).commit()
             R.id.nav_Alert -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container,AlertFragment()).commit()
             R.id.nav_setting -> supportFragmentManager.beginTransaction()

@@ -12,7 +12,7 @@
     app:cardMaxElevation="6dp"
     app:cardCornerRadius="10dp"
     app:cardBackgroundColor="#67C6E3"
-    android:id="@+id/daily_cardView">
+    android:id="@+id/detailsCV">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

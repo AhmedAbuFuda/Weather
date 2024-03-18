@@ -1,6 +1,12 @@
 package com.example.weather.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "currentWeather")
 data class WeatherResponse(
+    @PrimaryKey
+    var id: Int = 0,
     val cod: String,
     val message: Int,
     val cnt: Int,
@@ -67,9 +73,14 @@ data class City(
     val timezone: Int,
     val sunrise: Long,
     val sunset: Long
-)
+){
+    constructor():this(0,"",Coord(),"",0,0,0,0)
+}
 
 data class Coord(
     val lat: Double,
     val lon: Double
-)
+){
+    constructor():this(0.0,0.0)
+}
+

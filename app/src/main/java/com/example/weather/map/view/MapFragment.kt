@@ -1,5 +1,6 @@
-package com.example.weather.map
+package com.example.weather.map.view
 
+import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
@@ -9,13 +10,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.SearchView.OnQueryTextListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.example.weather.Home.view.HomeFragment
+import com.example.weather.Home.viewmodel.HomeViewModel
+import com.example.weather.Home.viewmodel.HomeViewModelFactory
 import com.example.weather.R
-import com.example.weather.databinding.FragmentFavoriteBinding
 import com.example.weather.databinding.FragmentMapBinding
-import com.example.weather.favorite.FavoriteFragment
+import com.example.weather.db.WeatherLocalDataSourceImp
+import com.example.weather.favorite.view.FavoriteFragment
+import com.example.weather.map.viewmodel.MapViewModel
+import com.example.weather.map.viewmodel.MapViewModelFactory
+import com.example.weather.model.APIState
+import com.example.weather.model.FavoritePlace
+import com.example.weather.model.FavoriteWeather
+import com.example.weather.model.WeatherRepositoryImp
+import com.example.weather.network.WeatherRemoteDataSourceImp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -24,6 +36,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.Locale
 
@@ -32,6 +46,9 @@ class MapFragment : Fragment() , OnMapReadyCallback {
     lateinit var map : GoogleMap
     private var marker: Marker? = null
     lateinit var binding: FragmentMapBinding
+    private lateinit var viewModel : MapViewModel
+    private lateinit var mapFactory : MapViewModelFactory
+    var  address : Address? = null
     lateinit var latLng : LatLng
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +67,12 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
 
+        mapFactory=MapViewModelFactory(
+            WeatherRepositoryImp.getInstance(
+                WeatherRemoteDataSourceImp.getInstance(), WeatherLocalDataSourceImp(requireContext())
+            ))
+        viewModel = ViewModelProvider(this,mapFactory)[MapViewModel::class.java]
+
         binding.mapSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val location: String = binding.mapSearch.query.toString()
@@ -61,14 +84,15 @@ class MapFragment : Fragment() , OnMapReadyCallback {
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }
-                    val address = addressList?.firstOrNull()
+                     address = addressList?.firstOrNull()
                     if (address != null) {
-                        val latLng = LatLng(address.latitude, address.longitude)
+                        latLng = LatLng(address!!.latitude, address!!.longitude)
                         map.addMarker(
                             MarkerOptions().position(latLng).title(location)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                         )
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10F))
+                        binding.save.visibility = View.VISIBLE
                     } else {
                         Toast.makeText(
                             requireContext(),
@@ -89,12 +113,22 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         binding.save.setOnClickListener {
+            if (marker != null){
+                val favoritePlace = FavoritePlace(latitude = marker!!.position.latitude, longitude = marker!!.position.longitude, address= getAddressGeoCoder(marker!!.position.latitude,marker!!.position.longitude))
+                viewModel.insertFavoritePlace(favoritePlace)
+            }else{
+                val favoritePlace = FavoritePlace(latitude = address!!.latitude, longitude = address!!.longitude, address= getAddressGeoCoder(address!!.latitude,address!!.longitude))
+                viewModel.insertFavoritePlace(favoritePlace)
+            }
+
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, FavoriteFragment()).commit()
+
             Log.i("TAG", "onViewCreated: "+ (marker?.position?.latitude))
             Log.i("TAG", "onViewCreated: "+ (marker?.position?.longitude))
             Log.i("TAG", "onViewCreated: "+ (marker?.title))
         }
+
     }
 
     override fun onMapReady(googleMap : GoogleMap) {
@@ -137,6 +171,29 @@ class MapFragment : Fragment() , OnMapReadyCallback {
             marker?.showInfoWindow()
             binding.save.visibility = View.VISIBLE
         }
+    }
+
+    fun getAddressGeoCoder(latitude: Double?, longitude: Double?): String {
+        var address = ""
+        val geocoder = Geocoder(requireContext(),  Locale.US)
+        val addresses = geocoder.getFromLocation(latitude!!, longitude!!, 1)
+        if (addresses != null && addresses.size > 0) {
+            val city = addresses!![0].locality
+            val country = addresses[0].countryName
+            if(city == null){
+                address = country
+            }else{
+                address = "$country / $city"
+            }
+            if(city == null && country == null)
+                address = "Unknown Place"
+        }
+        return address
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
 
