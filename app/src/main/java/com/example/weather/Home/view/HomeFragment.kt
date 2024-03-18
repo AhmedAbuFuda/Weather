@@ -39,7 +39,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class HomeFragment : Fragment() {
     private lateinit var binding : FragmentHomeBinding
@@ -140,13 +139,23 @@ class HomeFragment : Fragment() {
                     val location = locationResult.lastLocation
                     viewModel.getWeather(location?.latitude!!,location?.longitude!!,"metric","en")
                     lifecycleScope.launch {
-                        viewModel.weather.collectLatest {result ->
+                        viewModel.weatherApi.collectLatest { result ->
                             when(result){
                                 is APIState.Loading ->{
                                     Log.i("loading", "Loading: ")
+                                    binding.animationView.visibility = View.VISIBLE
+                                    binding.hourCV.visibility = View.GONE
+                                    binding.dailyCV.visibility = View.GONE
+                                    binding.detailsCV.visibility = View.GONE
                                 }
 
                                 is APIState.Success ->{
+                                    binding.animationView.visibility = View.GONE
+                                    binding.hourCV.visibility = View.VISIBLE
+                                    binding.dailyCV.visibility = View.VISIBLE
+                                    binding.detailsCV.visibility = View.VISIBLE
+                                    viewModel.deleteCurrentWeather()
+                                    viewModel.insertCurrentWeather(result.data)
                                     drawScreen(result.data)
                                     hourAdapter.submitList(result.data.list.subList(0,8))
                                     dayAdapter.submitList(result.data.list.chunked(8))

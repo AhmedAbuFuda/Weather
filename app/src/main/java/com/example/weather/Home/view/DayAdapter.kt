@@ -6,10 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.weather.databinding.HourItemBinding
 import com.example.weather.databinding.WeakItemBinding
 import com.example.weather.getDay
-import com.example.weather.getHourTime
 import com.example.weather.model.WeatherEntry
 
 class DayAdapter (private var context: Context): ListAdapter<List<WeatherEntry>, WeakViewHolder>(DayDiffUtil()){
