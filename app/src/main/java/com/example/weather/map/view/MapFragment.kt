@@ -168,7 +168,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
         }
     }
 
-    fun getAddressGeoCoder(latitude: Double?, longitude: Double?): String {
+    private fun getAddressGeoCoder(latitude: Double?, longitude: Double?): String {
         var address = ""
         val geocoder = Geocoder(requireContext(),  Locale.US)
         val addresses = geocoder.getFromLocation(latitude!!, longitude!!, 1)

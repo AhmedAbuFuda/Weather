@@ -1,9 +1,11 @@
 package com.example.weather.Home.view
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
@@ -24,10 +26,12 @@ import com.bumptech.glide.Glide
 import com.example.weather.Constants.REQUEST_CODE
 import com.example.weather.Home.viewmodel.HomeViewModel
 import com.example.weather.Home.viewmodel.HomeViewModelFactory
+import com.example.weather.checkNetwork
 import com.example.weather.databinding.FragmentHomeBinding
 import com.example.weather.db.WeatherLocalDataSourceImp
 import com.example.weather.getCurrentTime
 import com.example.weather.model.APIState
+import com.example.weather.model.CurrentDBState
 import com.example.weather.model.WeatherRepositoryImp
 import com.example.weather.model.WeatherResponse
 import com.example.weather.network.WeatherRemoteDataSourceImp
@@ -37,6 +41,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -63,7 +68,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         hourLayoutManager = LinearLayoutManager(requireContext(),  RecyclerView.HORIZONTAL, false)
         hourAdapter = HourAdapter(requireContext())
         binding.hourlyRV.apply {
@@ -83,6 +87,8 @@ class HomeFragment : Fragment() {
                 WeatherRemoteDataSourceImp.getInstance(), WeatherLocalDataSourceImp(requireContext())
             ))
         viewModel = ViewModelProvider(this,homeFactory)[HomeViewModel::class.java]
+
+
     }
 
     override fun onStart() {
@@ -126,58 +132,38 @@ class HomeFragment : Fragment() {
             LocationManager.NETWORK_PROVIDER)
     }
 
-    @SuppressLint("MissingPermission")
     private fun getFreshLocation() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        fusedLocationProviderClient.requestLocationUpdates(
-            LocationRequest.Builder(0).apply {
-                setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-            }.build(),
-            object : LocationCallback() {
-                override fun onLocationResult(locationResult: LocationResult) {
-                    super.onLocationResult(locationResult)
-                    val location = locationResult.lastLocation
-                    viewModel.getWeather(location?.latitude!!,location?.longitude!!,"metric","en")
-                    lifecycleScope.launch {
-                        viewModel.weatherApi.collectLatest { result ->
-                            when(result){
-                                is APIState.Loading ->{
-                                    Log.i("loading", "Loading: ")
-                                    binding.animationView.visibility = View.VISIBLE
-                                    binding.hourCV.visibility = View.GONE
-                                    binding.dailyCV.visibility = View.GONE
-                                    binding.detailsCV.visibility = View.GONE
-                                }
-
-                                is APIState.Success ->{
-                                    binding.animationView.visibility = View.GONE
-                                    binding.hourCV.visibility = View.VISIBLE
-                                    binding.dailyCV.visibility = View.VISIBLE
-                                    binding.detailsCV.visibility = View.VISIBLE
-                                    viewModel.deleteCurrentWeather()
-                                    viewModel.insertCurrentWeather(result.data)
-                                    drawScreen(result.data)
-                                    hourAdapter.submitList(result.data.list.subList(0,8))
-                                    dayAdapter.submitList(result.data.list.chunked(8))
-                                }
-
-                                else ->{
-                                    Log.i("Error", "Error: ")
-                                }
-                            }
-
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireContext())
+        if (checkPermission()) {
+            fusedLocationProviderClient.requestLocationUpdates(
+                LocationRequest.Builder(0).apply {
+                    setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                }.build(),
+                object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult) {
+                        super.onLocationResult(locationResult)
+                        val location = locationResult.lastLocation
+                        if (checkNetwork(requireContext())){
+                            getWeatherFromApi(location)
+                        }else{
+                            getWeatherFromDB()
                         }
-                    }
-                    /*viewModel.weather.observe(viewLifecycleOwner) { value ->
+                        /*viewModel.weather.observe(viewLifecycleOwner) { value ->
                         drawScreen(value)
                         hourAdapter.submitList(value.list.subList(0,8))
                         dayAdapter.submitList(value.list.chunked(8))
                     }*/
-                    fusedLocationProviderClient.removeLocationUpdates(this);
-                }
-            },
-            Looper.myLooper()
-        )
+                        fusedLocationProviderClient.removeLocationUpdates(this);
+                    }
+                },
+                Looper.myLooper()
+            )
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION),
+                REQUEST_CODE)
+        }
     }
 
     private fun enableLocationServices() {
@@ -195,6 +181,75 @@ class HomeFragment : Fragment() {
         if(requestCode == REQUEST_CODE){
             if (grantResults.size>1 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 getFreshLocation()
+            }
+        }
+    }
+
+    fun getWeatherFromApi(location : Location?){
+        viewModel.getWeather(
+            location?.latitude!!,
+            location?.longitude!!,
+            "metric",
+            "en"
+        )
+        lifecycleScope.launch {
+            viewModel.weatherApi.collectLatest { result ->
+                when (result) {
+                    is APIState.Loading -> {
+                        Log.i("loading", "Loading: ")
+                        binding.animationView.visibility = View.VISIBLE
+                        binding.hourCV.visibility = View.GONE
+                        binding.dailyCV.visibility = View.GONE
+                        binding.detailsCV.visibility = View.GONE
+                    }
+
+                    is APIState.Success -> {
+                        binding.animationView.visibility = View.GONE
+                        binding.hourCV.visibility = View.VISIBLE
+                        binding.dailyCV.visibility = View.VISIBLE
+                        binding.detailsCV.visibility = View.VISIBLE
+                        viewModel.deleteCurrentWeather()
+                        viewModel.insertCurrentWeather(result.data)
+                        drawScreen(result.data)
+                        hourAdapter.submitList(result.data.list.subList(0, 8))
+                        dayAdapter.submitList(result.data.list.chunked(8))
+                    }
+
+                    else -> {
+
+                    }
+                }
+
+            }
+        }
+    }
+    fun getWeatherFromDB(){
+        viewModel.getCurrentWeather()
+        lifecycleScope.launch {
+            viewModel.weatherDB.collectLatest {result ->
+                when(result){
+                    is CurrentDBState.Loading ->{
+                        Log.i("loading", "Loading: ")
+                        binding.animationView.visibility = View.VISIBLE
+                        binding.hourCV.visibility = View.GONE
+                        binding.dailyCV.visibility = View.GONE
+                        binding.detailsCV.visibility = View.GONE
+                    }
+                    is CurrentDBState.Success ->{
+                        delay(1500)
+                        binding.animationView.visibility = View.GONE
+                        binding.hourCV.visibility = View.VISIBLE
+                        binding.dailyCV.visibility = View.VISIBLE
+                        binding.detailsCV.visibility = View.VISIBLE
+                        drawScreen(result.data[0])
+                        hourAdapter.submitList(result.data[0].list.subList(0, 8))
+                        dayAdapter.submitList(result.data[0].list.chunked(8))
+                    }
+                    else ->{
+
+                    }
+                }
+
             }
         }
     }

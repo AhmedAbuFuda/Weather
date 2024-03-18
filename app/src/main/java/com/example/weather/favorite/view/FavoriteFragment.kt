@@ -166,14 +166,18 @@ class FavoriteFragment : Fragment(), FavoriteClickListener {
     }*/
 
     override fun onClick(favoritePlace: FavoritePlace) {
-        val fragment = FavoriteDetails()
-        val bundle = Bundle()
-        bundle.putParcelable("data", favoritePlace)
-        fragment.arguments = bundle
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        if(checkNetwork(requireContext())){
+            val fragment = FavoriteDetails()
+            val bundle = Bundle()
+            bundle.putParcelable("data", favoritePlace)
+            fragment.arguments = bundle
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, fragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }else{
+            Toast.makeText(requireContext(),"No Internet Connection", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onClickDelete(id : Int) {
