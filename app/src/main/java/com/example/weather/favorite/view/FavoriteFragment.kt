@@ -1,5 +1,6 @@
 package com.example.weather.favorite.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import com.example.weather.databinding.FragmentFavoriteBinding
 import com.example.weather.db.WeatherLocalDataSourceImp
 import com.example.weather.favorite.viewmodel.FavoriteViewModel
 import com.example.weather.favorite.viewmodel.FavoriteViewModelFactory
+import com.example.weather.favoritedetalis.FavoriteDetails
 import com.example.weather.map.view.MapFragment
 import com.example.weather.model.APIState
 import com.example.weather.model.FavoriteDBState
@@ -158,7 +160,14 @@ class FavoriteFragment : Fragment(), FavoriteClickListener {
     }*/
 
     override fun onClick(favoritePlace: FavoritePlace) {
-        TODO("Not yet implemented")
+        val fragment = FavoriteDetails()
+        val bundle = Bundle()
+        bundle.putParcelable("data", favoritePlace)
+        fragment.arguments = bundle
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     override fun onClickDelete(id : Int) {

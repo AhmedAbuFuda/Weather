@@ -1,6 +1,5 @@
 package com.example.weather.map.view
 
-import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
@@ -13,10 +12,6 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.example.weather.Home.view.HomeFragment
-import com.example.weather.Home.viewmodel.HomeViewModel
-import com.example.weather.Home.viewmodel.HomeViewModelFactory
 import com.example.weather.R
 import com.example.weather.databinding.FragmentMapBinding
 import com.example.weather.db.WeatherLocalDataSourceImp
@@ -114,10 +109,10 @@ class MapFragment : Fragment() , OnMapReadyCallback {
 
         binding.save.setOnClickListener {
             if (marker != null){
-                val favoritePlace = FavoritePlace(latitude = marker!!.position.latitude, longitude = marker!!.position.longitude, address= getAddressGeoCoder(marker!!.position.latitude,marker!!.position.longitude))
+                val favoritePlace = FavoritePlace(latitude = marker!!.position.latitude, longitude = marker!!.position.longitude, address = getAddressGeoCoder(marker!!.position.latitude,marker!!.position.longitude))
                 viewModel.insertFavoritePlace(favoritePlace)
             }else{
-                val favoritePlace = FavoritePlace(latitude = address!!.latitude, longitude = address!!.longitude, address= getAddressGeoCoder(address!!.latitude,address!!.longitude))
+                val favoritePlace = FavoritePlace(latitude = address!!.latitude, longitude = address!!.longitude, address = getAddressGeoCoder(address!!.latitude,address!!.longitude))
                 viewModel.insertFavoritePlace(favoritePlace)
             }
 
