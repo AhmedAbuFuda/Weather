@@ -1,6 +1,5 @@
 package com.example.weather.favorite.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,9 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weather.Home.view.HourAdapter
-import com.example.weather.Home.viewmodel.HomeViewModel
-import com.example.weather.Home.viewmodel.HomeViewModelFactory
 import com.example.weather.R
 import com.example.weather.checkNetwork
 import com.example.weather.databinding.FragmentFavoriteBinding
@@ -24,10 +20,7 @@ import com.example.weather.favorite.viewmodel.FavoriteViewModel
 import com.example.weather.favorite.viewmodel.FavoriteViewModelFactory
 import com.example.weather.favoritedetalis.FavoriteDetails
 import com.example.weather.map.view.MapFragment
-import com.example.weather.model.APIState
-import com.example.weather.model.FavoriteDBState
 import com.example.weather.model.FavoritePlace
-import com.example.weather.model.FavoriteWeather
 import com.example.weather.model.PlaceDBState
 import com.example.weather.model.WeatherRepositoryImp
 import com.example.weather.network.WeatherRemoteDataSourceImp
@@ -83,11 +76,17 @@ class FavoriteFragment : Fragment(), FavoriteClickListener {
                         binding.favFab.visibility = View.GONE
                     }
                     is PlaceDBState.Success ->{
-                        delay(3000)
-                        binding.favoriteAnimation.visibility= View.GONE
-                        binding.favRV.visibility = View.VISIBLE
-                        binding.favFab.visibility = View.VISIBLE
-                        favoriteAdapter.submitList(result.data)
+                        if (result.data.isNullOrEmpty()){
+                            binding.favoriteAnimation.visibility= View.VISIBLE
+                            binding.favRV.visibility = View.GONE
+                            binding.favFab.visibility = View.VISIBLE
+                        }else {
+                            delay(1500)
+                            binding.favoriteAnimation.visibility = View.GONE
+                            binding.favRV.visibility = View.VISIBLE
+                            binding.favFab.visibility = View.VISIBLE
+                            favoriteAdapter.submitList(result.data)
+                        }
                     }
 
                     else ->{
