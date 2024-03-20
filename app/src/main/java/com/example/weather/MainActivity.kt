@@ -1,8 +1,13 @@
 package com.example.weather
 
+import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -13,9 +18,12 @@ import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.favorite.view.FavoriteFragment
 import com.example.weather.setting.SettingFragment
 import com.google.android.material.navigation.NavigationView
+import java.util.Locale
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var sharedPreference: SharedPreferences
+    var language : String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)

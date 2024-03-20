@@ -29,4 +29,7 @@
     <string name="dropped_pin">Dropped Pin</string>
     <string name="title">Delete Favorite</string>
     <string name="message">Are you sure you want to delete this favorite?</string>
+    <string name="_5_day_forecast">5-day forecast</string>
+    <string name="_3_hour_forecast">3-hour forecast</string>
+    <string name="weather_details">Weather Details</string>
 </resources>

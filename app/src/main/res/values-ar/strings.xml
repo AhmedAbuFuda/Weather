@@ -5,7 +5,6 @@
     <string name="favorite">التفضيلات</string>
     <string name="alert">التنبيهات</string>
     <string name="setting">الاعدادات</string>
-
     <string name="location">الموقع</string>
     <string name="language">اللغة</string>
     <string name="gps">تحديد المواقع</string>
@@ -25,10 +24,13 @@
     <string name="ultraviolet">فوق البنفسجية</string>
     <string name="visibility">الرؤية</string>
     <string name="wind">الرياح</string>
-    <string name="max_min">Max / Min</string>
+    <string name="max_min"> الأقصى/الأدنى</string>
     <string name="my_apikey">AIzaSyD6mQanVxLrWT9GKHpE57LWq6RKot0-ksg</string>
     <string name="save">حـفـظ</string>
-    <string name="dropped_pin">Dropped Pin</string>
+    <string name="dropped_pin">دبوس مسقط</string>
     <string name="title">حذف من المفضلة</string>
-    <string name="message">Are you sure you want to delete this favorite?</string>
+    <string name="message">هل أنت متأكد أنك تريد حذف هذه المفضلة؟</string>
+    <string name="_5_day_forecast">تكهن بحالة الجو لمدة خمسة ايام</string>
+    <string name="_3_hour_forecast">تكهن بحالة الجو كل ثلاث ساعات</string>
+    <string name="weather_details">تفاصيل الطقس</string>
 </resources>

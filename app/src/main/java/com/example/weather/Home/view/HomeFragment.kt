@@ -4,9 +4,12 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -23,6 +26,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.weather.Constants
 import com.example.weather.Constants.REQUEST_CODE
 import com.example.weather.Home.viewmodel.HomeViewModel
 import com.example.weather.Home.viewmodel.HomeViewModelFactory
@@ -44,6 +48,7 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class HomeFragment : Fragment() {
     private lateinit var binding : FragmentHomeBinding
@@ -54,6 +59,12 @@ class HomeFragment : Fragment() {
     private lateinit var dayAdapter: DayAdapter
     private lateinit var dayLayoutManager: LinearLayoutManager
     lateinit var fusedLocationProviderClient : FusedLocationProviderClient
+    private lateinit var sharedPreference: SharedPreferences
+    var language : String? = ""
+    private var unit : String? = ""
+    private var speed : String? = ""
+    var latitude : Double = 0.0
+    var longitude : Double = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -68,6 +79,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPreference = requireActivity().getSharedPreferences(Constants.SETTING_SHARED, Context.MODE_PRIVATE)
+        language = sharedPreference.getString(Constants.LANGUAGE,Constants.ENGLISH)
+        unit = sharedPreference.getString(Constants.TEMPERATURE,Constants.CELSIUS)
+        speed = sharedPreference.getString(Constants.WIND_SPEED,Constants.METER_SECOND)
+        latitude = sharedPreference.getFloat(Constants.LATITUDE,0.0F).toDouble()
+        longitude = sharedPreference.getFloat(Constants.LONGITUDE,0.0F).toDouble()
+
+        checkUnits()
+
         hourLayoutManager = LinearLayoutManager(requireContext(),  RecyclerView.HORIZONTAL, false)
         hourAdapter = HourAdapter(requireContext())
         binding.hourlyRV.apply {
@@ -88,37 +108,45 @@ class HomeFragment : Fragment() {
             ))
         viewModel = ViewModelProvider(this,homeFactory)[HomeViewModel::class.java]
 
-
+        if (longitude != 0.0 && latitude != 0.0){
+            if (checkNetwork(requireContext())){
+                getWeatherFromApi(latitude,longitude)
+            }else{
+                getWeatherFromDB()
+            }
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        if(checkPermission()){
-            if(isLocationEnabled()){
-                getFreshLocation()
+        if (longitude == 0.0 && latitude == 0.0){
+            if(checkPermission()){
+                if(isLocationEnabled()){
+                    getFreshLocation()
+                }else{
+                    enableLocationServices()
+                }
             }else{
-                enableLocationServices()
+                ActivityCompat.requestPermissions(requireActivity(),
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION),
+                    REQUEST_CODE)
             }
-        }else{
-            ActivityCompat.requestPermissions(requireActivity(),
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION),
-                REQUEST_CODE)
         }
     }
 
     private fun drawScreen(weather : WeatherResponse){
         binding.cityTV.text = weather.city.name
-        binding.dateTV.text = getCurrentTime(weather.list[0].dt)
-        binding.temperatureTV.text = weather.list[0].main.temp.toInt().toString()+" °C"
+        binding.dateTV.text = getCurrentTime(weather.list[0].dt, language!!)
+        binding.temperatureTV.text = weather.list[0].main.temp.toInt().toString()+Constants.UNIT
         binding.descriptionTV.text  = weather.list[0].weather[0].description
         Glide.with(requireContext()).load("https://openweathermap.org/img/wn/"+ weather.list[0].weather[0].icon+"@4x.png")
             .into(binding.weatherImage)
-        binding.pressureTv.text = weather.list[0].main.pressure.toString()
-        binding.humidityTv.text = weather.list[0].main.humidity.toString()
-        binding.windTv.text = weather.list[0].wind.speed.toString()
-        binding.cloudTv.text = weather.list[0].clouds.all.toString()
-        binding.ultravioletTv.text =weather.list[0].main.temp_max.toInt().toString()+ " / "+ weather.list[0].main.temp_min.toInt().toString()
-        binding.visibilityTv.text = weather.list[0].visibility.toString()
+        binding.pressureTv.text = weather.list[0].main.pressure.toString()+" Pa"
+        binding.humidityTv.text = weather.list[0].main.humidity.toString()+" %"
+        binding.windTv.text = weather.list[0].wind.speed.toString()+Constants.speed
+        binding.cloudTv.text = weather.list[0].clouds.all.toString()+" %"
+        binding.ultravioletTv.text =weather.list[0].main.temp_max.toInt().toString()+Constants.UNIT+ " / "+ weather.list[0].main.temp_min.toInt().toString()+Constants.UNIT
+        binding.visibilityTv.text = weather.list[0].visibility.toString()+" %"
     }
 
     private fun checkPermission(): Boolean {
@@ -145,7 +173,7 @@ class HomeFragment : Fragment() {
                         super.onLocationResult(locationResult)
                         val location = locationResult.lastLocation
                         if (checkNetwork(requireContext())){
-                            getWeatherFromApi(location)
+                            getWeatherFromApi(location!!.latitude, location.longitude)
                         }else{
                             getWeatherFromDB()
                         }
@@ -185,12 +213,12 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun getWeatherFromApi(location : Location?){
+    fun getWeatherFromApi(latitude : Double, longitude : Double ){
         viewModel.getWeather(
-            location?.latitude!!,
-            location?.longitude!!,
-            "metric",
-            "en"
+            latitude,
+            longitude,
+            unit,
+            language
         )
         lifecycleScope.launch {
             viewModel.weatherApi.collectLatest { result ->
@@ -252,6 +280,23 @@ class HomeFragment : Fragment() {
 
             }
         }
+    }
+
+    private fun checkUnits(){
+        if(unit == Constants.CELSIUS){
+            Constants.UNIT = " °C"
+        }else if(unit == Constants.FAHRENHEIT){
+            Constants.UNIT = " °F"
+        }else if(unit == Constants.KELVIN){
+            Constants.UNIT = " °K"
+        }
+
+        if(speed == Constants.METER_SECOND){
+            Constants.speed = " m/s"
+        }else if(speed == Constants.MILE_HOUR){
+            Constants.UNIT = " mi/h"
+        }
+
     }
 
 }

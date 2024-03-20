@@ -7,28 +7,49 @@ import android.os.Build
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.content.res.Resources
+import org.intellij.lang.annotations.Language
 
 object Constants {
     const val API_KEY = "e6c8bada64ea5356977e8966ec825784"
     const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
     const val REQUEST_CODE = 5005
+    const val SETTING_SHARED = "Setting"
+    const val LOCATION = "Location"
+    const val LANGUAGE = "Language"
+    const val TEMPERATURE = "Temperature"
+    const val WIND_SPEED = "WindSpeed"
+    const val GPS = "GPS"
+    const val MAP = "Map"
+    const val ENGLISH = "en"
+    const val ARABIC = "ar"
+    const val METER_SECOND = "meter/sec"
+    const val MILE_HOUR = "mile/hour"
+    const val CELSIUS = "metric"
+    const val FAHRENHEIT = "imperial"
+    const val KELVIN = "standard"
+    const val LONGITUDE = "longitude"
+    const val LATITUDE = "latitude"
+
+    var UNIT = " °C"
+    var speed = " m/s"
 }
 
-fun getCurrentTime(dt : Long) : String{
+fun getCurrentTime(dt : Long,language: String) : String{
     val data = Date(dt * 1000)
-    val dateFormat = SimpleDateFormat("EEE , d/M/yyyy", Locale.US)
+    val dateFormat = SimpleDateFormat("EEE , d/M/yyyy", Locale(language))
     return dateFormat.format(data)
 }
 
-fun getHourTime(dt : Long) : String{
+fun getHourTime(dt : Long,language: String) : String{
     val data = Date(dt * 1000)
-    val dateFormat = SimpleDateFormat("k a", Locale.US)
+    val dateFormat = SimpleDateFormat("k a", Locale(language))
     return dateFormat.format(data)
 }
 
-fun getDay(dt : Long) : String{
+fun getDay(dt : Long,language: String) : String{
     val data = Date(dt * 1000)
-    val dateFormat = SimpleDateFormat("E, d/M", Locale.US)
+    val dateFormat = SimpleDateFormat("E, d/M", Locale(language))
     return dateFormat.format(data)
 }
 
@@ -48,3 +69,4 @@ fun checkNetwork(context: Context): Boolean {
         return networkInfo.isConnected
     }
 }
+
