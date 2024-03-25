@@ -31,6 +31,9 @@ object Constants {
     const val LONGITUDE = "longitude"
     const val LATITUDE = "latitude"
 
+    const val NOTIFICATION = "NOTIFICATION"
+    const val ALARM = "ALARM"
+
     var UNIT = " °C"
     var speed = " m/s"
 }
