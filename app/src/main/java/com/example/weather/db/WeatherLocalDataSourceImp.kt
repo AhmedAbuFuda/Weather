@@ -1,8 +1,8 @@
 package com.example.weather.db
 
 import android.content.Context
+import com.example.weather.model.AlertWeather
 import com.example.weather.model.FavoritePlace
-import com.example.weather.model.FavoriteWeather
 import com.example.weather.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -22,17 +22,6 @@ class WeatherLocalDataSourceImp(context : Context) : WeatherLocalDataSource {
         dao.deleteCurrentWeather()
     }
 
-    override fun getFavoriteWeather(): Flow<List<FavoriteWeather>> {
-        return dao.getFavoriteWeather()
-    }
-
-    override suspend fun insertFavoriteWeather(favoriteWeather: FavoriteWeather) {
-        dao.insertFavoriteWeather(favoriteWeather)
-    }
-
-    override suspend fun deleteFavoriteWeather() {
-        dao.deleteFavoriteWeather()
-    }
 
     override fun getFavoritePlace(): Flow<List<FavoritePlace>> {
         return dao.getFavoritePlace()
@@ -44,5 +33,17 @@ class WeatherLocalDataSourceImp(context : Context) : WeatherLocalDataSource {
 
     override suspend fun deleteFavoritePlace(id : Int) {
         dao.deleteFavoritePlace(id)
+    }
+
+    override fun getAlertsWeather(): Flow<List<AlertWeather>> {
+        return dao.getAlertWeather()
+    }
+
+    override suspend fun insertAlert(alertWeather: AlertWeather) {
+        dao.insertAlert(alertWeather)
+    }
+
+    override suspend fun deleteAlert(alertWeather: AlertWeather) {
+        dao.deleteAlert(alertWeather)
     }
 }

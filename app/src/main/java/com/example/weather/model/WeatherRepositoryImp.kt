@@ -44,17 +44,6 @@ class WeatherRepositoryImp private constructor(
        return weatherLocalDataSource.deleteCurrentWeather()
     }
 
-    override fun getFavoriteWeather(): Flow<List<FavoriteWeather>> {
-        return weatherLocalDataSource.getFavoriteWeather()
-    }
-
-    override suspend fun insertFavoriteWeather(favoriteWeather: FavoriteWeather) {
-        return weatherLocalDataSource.insertFavoriteWeather(favoriteWeather)
-    }
-
-    override suspend fun deleteFavoriteWeather() {
-        return weatherLocalDataSource.deleteFavoriteWeather()
-    }
 
     override fun getFavoritePlace(): Flow<List<FavoritePlace>> {
         return weatherLocalDataSource.getFavoritePlace()
@@ -66,5 +55,17 @@ class WeatherRepositoryImp private constructor(
 
     override suspend fun deleteFavoritePlace(id : Int) {
         return weatherLocalDataSource.deleteFavoritePlace(id)
+    }
+
+    override fun getAlertsWeather(): Flow<List<AlertWeather>> {
+        return weatherLocalDataSource.getAlertsWeather()
+    }
+
+    override suspend fun insertAlert(alertWeather: AlertWeather) {
+        return weatherLocalDataSource.insertAlert(alertWeather)
+    }
+
+    override suspend fun deleteAlert(alertWeather: AlertWeather) {
+        return weatherLocalDataSource.deleteAlert(alertWeather)
     }
 }
