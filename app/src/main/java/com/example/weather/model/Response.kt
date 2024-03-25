@@ -11,7 +11,9 @@ data class WeatherResponse(
     val list: List<WeatherEntry>,
     @PrimaryKey
     val city: City
-)
+){
+    constructor():this("",0,0, listOf(),City())
+}
 
 data class WeatherEntry(
     val dt: Long,
@@ -24,7 +26,9 @@ data class WeatherEntry(
     val rain: Rain?,
     val sys: Sys,
     val dt_txt: String
-)
+){
+    constructor():this(0, Main(), listOf(), Clouds(), Wind(),0,0.0, Rain(), Sys(),"")
+}
 
 data class Main(
     val temp: Double,
@@ -36,32 +40,44 @@ data class Main(
     val grnd_level: Int,
     val humidity: Int,
     val temp_kf: Double
-)
+){
+    constructor():this(0.0,0.0,0.0,0.0,0,0,0,0,0.0)
+}
 
 data class Weather(
     val id: Int,
     val main: String,
     val description: String,
     val icon: String
-)
+){
+    constructor():this(0,"","","")
+}
 
 data class Clouds(
     val all: Int
-)
+){
+    constructor():this(0)
+}
 
 data class Wind(
     val speed: Double,
     val deg: Int,
     val gust: Double
-)
+){
+    constructor():this(0.0,1,0.0)
+}
 
 data class Rain(
     val `3h`: Double
-)
+){
+    constructor():this(0.0)
+}
 
 data class Sys(
     val pod: String
-)
+){
+    constructor():this("")
+}
 
 data class City(
     val id: Int,
