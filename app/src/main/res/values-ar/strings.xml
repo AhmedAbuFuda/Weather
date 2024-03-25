@@ -33,4 +33,6 @@
     <string name="_5_day_forecast">تكهن بحالة الجو لمدة خمسة ايام</string>
     <string name="_3_hour_forecast">تكهن بحالة الجو كل ثلاث ساعات</string>
     <string name="weather_details">تفاصيل الطقس</string>
+    <string name="title_alert">حذف من التنبيهات</string>
+    <string name="message_alert">هل أنت متأكد أنك تريد حذف هذه التنبيه؟</string>
 </resources>
