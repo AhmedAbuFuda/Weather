@@ -14,10 +14,10 @@ sealed class CurrentDBState {
     object Loading: CurrentDBState()
 }
 
-sealed class FavoriteDBState {
-    class Success(val data: List<FavoriteWeather>): FavoriteDBState()
-    class Failure(val msg:Throwable): FavoriteDBState()
-    object Loading: FavoriteDBState()
+sealed class AlertDBState {
+    class Success(val data: List<AlertWeather>): AlertDBState()
+    class Failure(val msg:Throwable): AlertDBState()
+    object Loading: AlertDBState()
 }
 
 sealed class PlaceDBState {
