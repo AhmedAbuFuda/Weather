@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.model.APIState
 import com.example.weather.model.FavoritePlace
-import com.example.weather.model.FavoriteWeather
+
 import com.example.weather.model.WeatherRepository
 import com.example.weather.model.WeatherResponse
 import kotlinx.coroutines.Dispatchers
@@ -21,15 +21,12 @@ class MapViewModel( private val repo : WeatherRepository) : ViewModel() {
             }
         }
     }
-    fun insertFavoriteWeather(favoriteWeather: FavoriteWeather){
-        viewModelScope.launch(Dispatchers.IO) {
-            repo.insertFavoriteWeather(favoriteWeather)
-        }
-    }
 
     fun insertFavoritePlace(favoritePlace: FavoritePlace){
         viewModelScope.launch(Dispatchers.IO){
             repo.insertFavoritePlace(favoritePlace)
         }
     }
+
+
 }

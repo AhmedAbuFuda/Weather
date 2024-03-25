@@ -1,24 +1,19 @@
 package com.example.weather
 
-import android.app.Activity
-import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.example.weather.Home.view.HomeFragment
-import com.example.weather.alert.AlertFragment
+import com.example.weather.alert.view.AlertFragment
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.favorite.view.FavoriteFragment
 import com.example.weather.setting.SettingFragment
 import com.google.android.material.navigation.NavigationView
-import java.util.Locale
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -61,7 +56,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_favorite -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, FavoriteFragment()).commit()
             R.id.nav_Alert -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container,AlertFragment()).commit()
+                .replace(R.id.fragment_container, AlertFragment()).commit()
             R.id.nav_setting -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container,SettingFragment()).commit()
         }
@@ -78,5 +73,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun restart() {
+        val intent = intent
+        finish()
+        startActivity(intent)
     }
 }

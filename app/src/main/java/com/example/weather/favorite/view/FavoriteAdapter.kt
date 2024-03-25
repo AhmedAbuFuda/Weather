@@ -5,15 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.weather.Home.view.HourViewHolder
-import com.example.weather.Home.view.WeatherDiffUtil
 import com.example.weather.databinding.FavoriteItemBinding
-import com.example.weather.databinding.WeakItemBinding
-import com.example.weather.getDay
 import com.example.weather.model.FavoritePlace
-import com.example.weather.model.FavoriteWeather
-import com.example.weather.model.WeatherEntry
 
 class FavoriteAdapter (private var context: Context, var action : (FavoritePlace) -> Unit, var delete : (Int) -> Unit) :
     ListAdapter<FavoritePlace, FavoriteViewHolder>(FavoriteDiffUtil()){

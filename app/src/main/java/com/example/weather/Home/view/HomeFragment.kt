@@ -30,6 +30,7 @@ import com.example.weather.Constants
 import com.example.weather.Constants.REQUEST_CODE
 import com.example.weather.Home.viewmodel.HomeViewModel
 import com.example.weather.Home.viewmodel.HomeViewModelFactory
+import com.example.weather.MainActivity
 import com.example.weather.checkNetwork
 import com.example.weather.databinding.FragmentHomeBinding
 import com.example.weather.db.WeatherLocalDataSourceImp
@@ -174,6 +175,8 @@ class HomeFragment : Fragment() {
                         val location = locationResult.lastLocation
                         if (checkNetwork(requireContext())){
                             getWeatherFromApi(location!!.latitude, location.longitude)
+                            sharedPreference.edit().putFloat(Constants.LATITUDE, location.latitude.toFloat()).apply()
+                            sharedPreference.edit().putFloat(Constants.LONGITUDE, location.longitude.toFloat()).apply()
                         }else{
                             getWeatherFromDB()
                         }
@@ -208,6 +211,7 @@ class HomeFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == REQUEST_CODE){
             if (grantResults.size>1 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                (requireActivity() as MainActivity).restart()
                 getFreshLocation()
             }
         }
@@ -294,7 +298,7 @@ class HomeFragment : Fragment() {
         if(speed == Constants.METER_SECOND){
             Constants.speed = " m/s"
         }else if(speed == Constants.MILE_HOUR){
-            Constants.UNIT = " mi/h"
+            Constants.speed = " mi/h"
         }
 
     }

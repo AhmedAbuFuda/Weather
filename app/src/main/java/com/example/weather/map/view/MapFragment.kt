@@ -20,7 +20,6 @@ import com.example.weather.map.viewmodel.MapViewModel
 import com.example.weather.map.viewmodel.MapViewModelFactory
 import com.example.weather.model.APIState
 import com.example.weather.model.FavoritePlace
-import com.example.weather.model.FavoriteWeather
 import com.example.weather.model.WeatherRepositoryImp
 import com.example.weather.network.WeatherRemoteDataSourceImp
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -170,7 +169,7 @@ class MapFragment : Fragment() , OnMapReadyCallback {
 
     private fun getAddressGeoCoder(latitude: Double?, longitude: Double?): String {
         var address = ""
-        val geocoder = Geocoder(requireContext(),  Locale.US)
+        val geocoder = Geocoder(requireContext(),  Locale.getDefault())
         val addresses = geocoder.getFromLocation(latitude!!, longitude!!, 1)
         if (addresses != null && addresses.size > 0) {
             val city = addresses!![0].locality
