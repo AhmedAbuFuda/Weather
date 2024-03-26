@@ -1,5 +1,6 @@
 package com.example.weather.db
 
+import com.example.weather.model.AlertWeather
 import com.example.weather.model.FavoritePlace
 import com.example.weather.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +34,18 @@ class FakeLocalDataSource(
         _favoritePlace.removeIf {
             it.id == id
         }
+    }
+
+    override fun getAlertsWeather(): Flow<List<AlertWeather>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertAlert(alertWeather: AlertWeather) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteAlert(alertWeather: AlertWeather) {
+        TODO("Not yet implemented")
     }
 
 }

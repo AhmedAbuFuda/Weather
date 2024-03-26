@@ -43,4 +43,16 @@ class FakeWeatherRepository(
             it.id == id
         }
     }
+
+    override fun getAlertsWeather(): Flow<List<AlertWeather>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertAlert(alertWeather: AlertWeather) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteAlert(alertWeather: AlertWeather) {
+        TODO("Not yet implemented")
+    }
 }

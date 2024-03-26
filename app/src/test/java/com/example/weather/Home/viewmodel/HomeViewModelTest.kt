@@ -2,6 +2,7 @@ package com.example.weather.Home.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.weather.model.APIState
 import com.example.weather.model.CurrentDBState
 import com.example.weather.model.FakeWeatherRepository
 import com.example.weather.model.WeatherResponse
