@@ -33,6 +33,7 @@ object Constants {
 
     const val NOTIFICATION = "NOTIFICATION"
     const val ALARM = "ALARM"
+    const val WEATHER_NOTIFICATION = "Weather Notification"
 
     var UNIT = " °C"
     var speed = " m/s"

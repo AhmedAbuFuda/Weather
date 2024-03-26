@@ -1,17 +1,22 @@
 package com.example.weather.alert.view
 
+import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioGroup
 import androidx.fragment.app.DialogFragment
 import com.example.weather.Constants
+import com.example.weather.alert.AlertReceiver
 import com.example.weather.alert.viewmodel.AlertViewModel
 import com.example.weather.databinding.FragmentPopUpDialogBinding
 import com.example.weather.model.AlertWeather
@@ -19,13 +24,16 @@ import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.math.abs
 
 
 class PopUpDialogFragment(val viewModel: AlertViewModel) : DialogFragment() {
 
     lateinit var binding : FragmentPopUpDialogBinding
-    private var startTime :Long =0
-    private var endTime: Long = 0
+    private  var startDate :Calendar = Calendar.getInstance()
+    private  var endDate: Calendar = Calendar.getInstance()
+    private  var startTime :Calendar = Calendar.getInstance()
+    private  var endTime: Calendar = Calendar.getInstance()
     private var type : String = Constants.NOTIFICATION
     private lateinit var sharedPreference: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +75,7 @@ class PopUpDialogFragment(val viewModel: AlertViewModel) : DialogFragment() {
                 lat = sharedPreference.getFloat(Constants.LATITUDE,0.0F).toDouble(),
                 lon = sharedPreference.getFloat(Constants.LONGITUDE,0.0F).toDouble())
             viewModel.insertAlert(alert)
+            createAlertReceiver(alert)
             dialog?.dismiss()
         }
         binding.cancelBtn.setOnClickListener {
@@ -87,7 +96,7 @@ class PopUpDialogFragment(val viewModel: AlertViewModel) : DialogFragment() {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
         val currentDate = dateFormat.format(currentCalendar.time)
 
-        val timeFormat = SimpleDateFormat("h:mm", Locale.getDefault())
+        val timeFormat = SimpleDateFormat("hh:mm", Locale.getDefault())
         val currentTime = timeFormat.format(currentCalendar.time)
         binding.fromDate.setText(currentDate)
         binding.fromTime.setText(currentTime)
@@ -105,6 +114,11 @@ class PopUpDialogFragment(val viewModel: AlertViewModel) : DialogFragment() {
                 calender.set(year, month, dayOfMonth)
                 text.setText(SimpleDateFormat("dd-MM-yyyy").format(calender.time))
 
+                if (text == binding.fromDate){
+                    startDate.set(year, month, dayOfMonth)
+                }else if (text == binding.toDate){
+                    endDate.set(year, month, dayOfMonth)
+                }
             },
             currentDate.get(Calendar.YEAR),
             currentDate.get(Calendar.MONTH),
@@ -116,14 +130,63 @@ class PopUpDialogFragment(val viewModel: AlertViewModel) : DialogFragment() {
 
     private fun pickTime(text : TextInputEditText){
         val currentDate: Calendar= Calendar.getInstance()
+        val calender: Calendar = Calendar.getInstance()
         val timePickerDialog =  TimePickerDialog(requireContext(), { view, hourOfDay, minute ->
-            text.setText("$hourOfDay:$minute")
+            calender.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            calender.set(Calendar.MINUTE, minute)
+            text.setText(SimpleDateFormat("hh:mm").format(calender.time))
+
+            if (text == binding.fromTime){
+                startTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                startTime.set(Calendar.MINUTE, minute)
+            }else if (text == binding.toTime){
+                endTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                endTime.set(Calendar.MINUTE, minute)
+            }
             },
             currentDate.get(Calendar.HOUR_OF_DAY),
             currentDate.get(Calendar.MINUTE)
             ,false);
 
         timePickerDialog.show();
+    }
+
+    private fun createAlertReceiver(alertWeather : AlertWeather){
+        val intent = Intent(requireContext(), AlertReceiver::class.java)
+        intent.putExtra("alert", alertWeather)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val startCalendar = Calendar.getInstance()
+        startCalendar.set(startDate.get(Calendar.YEAR),
+            startDate.get(Calendar.MONTH),
+            startDate.get(Calendar.DATE),
+            startTime.get(Calendar.HOUR_OF_DAY),
+            startTime.get(Calendar.MINUTE),
+            0)
+
+        val endCalendar = Calendar.getInstance()
+        endCalendar.set(endDate.get(Calendar.YEAR),
+            endDate.get(Calendar.MONTH),
+            endDate.get(Calendar.DATE),
+            endTime.get(Calendar.HOUR_OF_DAY),
+            endTime.get(Calendar.MINUTE),
+            0)
+
+        val differenceInMillis = abs(startCalendar.timeInMillis - endCalendar.timeInMillis)
+
+        Log.i("time", "createAlertReceiver: $differenceInMillis")
+        alarmManager.set(
+            AlarmManager.RTC_WAKEUP,
+            startCalendar.timeInMillis +(differenceInMillis/2),
+            pendingIntent
+        )
     }
 }
 

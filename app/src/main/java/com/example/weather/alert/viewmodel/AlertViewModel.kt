@@ -2,6 +2,7 @@ package com.example.weather.alert.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weather.model.APIState
 import com.example.weather.model.AlertDBState
 import com.example.weather.model.AlertWeather
 import com.example.weather.model.FavoritePlace

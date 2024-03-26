@@ -30,7 +30,9 @@ import kotlinx.coroutines.launch
 
 class AlertFragment : Fragment(), AlertOnClickListener {
     private lateinit var binding: FragmentAlertBinding
-    private lateinit var viewModel: AlertViewModel
+    companion object{
+        lateinit var alertViewModel: AlertViewModel
+    }
     private lateinit var alertFactory: AlertViewModelFactory
     private lateinit var alertAdapter: AlertAdapter
     private lateinit var alertLayoutManager: LinearLayoutManager
@@ -64,12 +66,12 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                 WeatherLocalDataSourceImp(requireContext())
             )
         )
-        viewModel = ViewModelProvider(this, alertFactory)[AlertViewModel::class.java]
+        alertViewModel = ViewModelProvider(this, alertFactory)[AlertViewModel::class.java]
         getAlerts()
 
         binding.alertFab.setOnClickListener {
             if (checkNetwork(requireContext())) {
-                val popUpDialog = PopUpDialogFragment(viewModel)
+                val popUpDialog = PopUpDialogFragment(alertViewModel)
                 popUpDialog.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
 
             } else {
@@ -85,16 +87,16 @@ class AlertFragment : Fragment(), AlertOnClickListener {
             .setTitle(getString(R.string.title_alert))
             .setMessage(getString(R.string.message_alert))
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                viewModel.deleteAlert(alertWeather)
+                alertViewModel.deleteAlert(alertWeather)
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
     private fun getAlerts() {
-        viewModel.getAlertsWeather()
+        alertViewModel.getAlertsWeather()
         lifecycleScope.launch {
-            viewModel.alertDB.collectLatest { result ->
+            alertViewModel.alertDB.collectLatest { result ->
                 when (result) {
                     is AlertDBState.Loading -> {
                         binding.alertAnimation.visibility = View.VISIBLE

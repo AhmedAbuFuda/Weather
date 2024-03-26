@@ -35,4 +35,11 @@
     <string name="weather_details">تفاصيل الطقس</string>
     <string name="title_alert">حذف من التنبيهات</string>
     <string name="message_alert">هل أنت متأكد أنك تريد حذف هذه التنبيه؟</string>
+    <string name="cancel">الغاء</string>
+    <string name="ok">موافق</string>
+    <string name="in">في</string>
+    <string name="weather">الطقس</string>
+    <string name="temper">و درجة الحرارة</string>
+    <string name="now">الان</string>
+    <string name="Weatheralert">تنبيه الطقس</string>
 </resources>
