@@ -52,7 +52,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAlertBinding.inflate(inflater, container, false)
-        askPermissions()
+        callPermissions()
         return binding.root
     }
 
@@ -134,7 +134,17 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         }
     }
 
-    private fun checkAppPermission() {
+    private fun callPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            requireActivity().setShowWhenLocked(true)
+            requireActivity().setTurnScreenOn(true)
+        }
+        if (!Settings.canDrawOverlays(requireActivity())) {
+            permissionsDialog()
+        }
+    }
+
+    private fun checkPermission() {
         if (!Settings.canDrawOverlays(requireContext())) {
             val intent = Intent(
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -142,6 +152,19 @@ class AlertFragment : Fragment(), AlertOnClickListener {
             )
             someActivityResultLauncher.launch(intent)
         }
+    }
+
+    private fun permissionsDialog() {
+        android.app.AlertDialog.Builder(requireActivity())
+            .setTitle("Permission Request")
+            .setCancelable(false)
+            .setMessage("Please allow Display other Apps Permission")
+            .setPositiveButton(
+                "Yes"
+            ) { _, _ -> checkPermission() }.setNegativeButton(
+                "No"
+            ) { _, _ -> Toast.makeText(requireContext(),"Unfortunately Can not use the alarm without allow Permission",Toast.LENGTH_LONG).show()
+            }.show()
     }
 
     private val someActivityResultLauncher =
@@ -152,12 +175,12 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     getString(R.string.alarm_not_show),
                     Toast.LENGTH_LONG
                 ).setAction("Enable") {
-                    sendToEnableIt()
+                    enableIt()
                 }.show()
             }
         }
 
-    private fun sendToEnableIt() {
+    private fun enableIt() {
         val intent = Intent(
             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
             Uri.parse("package:" + requireContext().packageName)
@@ -165,27 +188,6 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         someActivityResultLauncher.launch(intent)
     }
 
-    private fun askPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            requireActivity().setShowWhenLocked(true)
-            requireActivity().setTurnScreenOn(true)
-        }
-        if (!Settings.canDrawOverlays(requireActivity())) {
-            checkPermissionsDialog()
-        }
-    }
-
-    private fun checkPermissionsDialog() {
-        android.app.AlertDialog.Builder(requireActivity()).setTitle("Permission Request")
-            .setCancelable(false)
-            .setMessage("Please allow Display other Apps Permission")
-            .setPositiveButton(
-                "Yes"
-            ) { _, _ -> checkAppPermission() }.setNegativeButton(
-                "No"
-            ) { _, _ -> Toast.makeText(requireContext(),"Unfortunately Can not use the alarm without allow Permission",Toast.LENGTH_LONG).show()
-            }.show()
-    }
 
 }
 
