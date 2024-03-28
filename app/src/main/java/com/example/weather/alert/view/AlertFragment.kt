@@ -1,12 +1,17 @@
 package com.example.weather.alert.view
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +28,7 @@ import com.example.weather.model.AlertDBState
 import com.example.weather.model.AlertWeather
 import com.example.weather.model.WeatherRepositoryImp
 import com.example.weather.network.WeatherRemoteDataSourceImp
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -46,6 +52,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAlertBinding.inflate(inflater, container, false)
+        askPermissions()
         return binding.root
     }
 
@@ -126,6 +133,60 @@ class AlertFragment : Fragment(), AlertOnClickListener {
             }
         }
     }
+
+    private fun checkAppPermission() {
+        if (!Settings.canDrawOverlays(requireContext())) {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + requireContext().packageName)
+            )
+            someActivityResultLauncher.launch(intent)
+        }
+    }
+
+    private val someActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (!Settings.canDrawOverlays(requireContext())) {
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.alarm_not_show),
+                    Toast.LENGTH_LONG
+                ).setAction("Enable") {
+                    sendToEnableIt()
+                }.show()
+            }
+        }
+
+    private fun sendToEnableIt() {
+        val intent = Intent(
+            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            Uri.parse("package:" + requireContext().packageName)
+        )
+        someActivityResultLauncher.launch(intent)
+    }
+
+    private fun askPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            requireActivity().setShowWhenLocked(true)
+            requireActivity().setTurnScreenOn(true)
+        }
+        if (!Settings.canDrawOverlays(requireActivity())) {
+            checkPermissionsDialog()
+        }
+    }
+
+    private fun checkPermissionsDialog() {
+        android.app.AlertDialog.Builder(requireActivity()).setTitle("Permission Request")
+            .setCancelable(false)
+            .setMessage("Please allow Display other Apps Permission")
+            .setPositiveButton(
+                "Yes"
+            ) { _, _ -> checkAppPermission() }.setNegativeButton(
+                "No"
+            ) { _, _ -> Toast.makeText(requireContext(),"Unfortunately Can not use the alarm without allow Permission",Toast.LENGTH_LONG).show()
+            }.show()
+    }
+
 }
 
 

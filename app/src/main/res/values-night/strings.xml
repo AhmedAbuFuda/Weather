@@ -41,4 +41,5 @@
     <string name="temper">and Temperature is</string>
     <string name="now">now</string>
     <string name="Weatheralert">Weather Alert</string>
+    <string name="alarm_not_show">The Alarm is not allow to show</string>
 </resources>

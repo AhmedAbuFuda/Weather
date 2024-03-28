@@ -42,4 +42,5 @@
     <string name="temper">و درجة الحرارة</string>
     <string name="now">الان</string>
     <string name="Weatheralert">تنبيه الطقس</string>
+    <string name="alarm_not_show">The Alarm is not allow to show</string>
 </resources>
