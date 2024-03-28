@@ -1,15 +1,11 @@
 package com.example.weather.Home.view
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.location.Location
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -20,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -49,7 +46,7 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.Locale
+
 
 class HomeFragment : Fragment() {
     private lateinit var binding : FragmentHomeBinding
@@ -128,9 +125,13 @@ class HomeFragment : Fragment() {
                     enableLocationServices()
                 }
             }else{
-                ActivityCompat.requestPermissions(requireActivity(),
-                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION),
-                    REQUEST_CODE)
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    REQUEST_CODE
+                )
             }
         }
     }
@@ -151,8 +152,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun checkPermission(): Boolean {
-        return checkSelfPermission(requireContext(),android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                checkSelfPermission(requireContext(),android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun isLocationEnabled(): Boolean {
@@ -192,7 +193,7 @@ class HomeFragment : Fragment() {
             )
         } else {
             ActivityCompat.requestPermissions(requireActivity(),
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                 REQUEST_CODE)
         }
     }
@@ -203,17 +204,35 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
-    override fun onRequestPermissionsResult(
+    /*override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Log.i("requestCode", "onRequestPermissionsResult: hello")
         if(requestCode == REQUEST_CODE){
             if (grantResults.size>1 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Log.i("requestCode", "onRequestPermissionsResult: hi")
                 (requireActivity() as MainActivity).restart()
                 getFreshLocation()
             }
+        }
+    }*/
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == REQUEST_CODE && grantResults.size > 0
+            && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)){
+            getFreshLocation()
+        } else {
+            Toast
+                .makeText(activity, "Permission denied", Toast.LENGTH_LONG).show()
         }
     }
 

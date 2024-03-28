@@ -13,7 +13,7 @@ import org.intellij.lang.annotations.Language
 object Constants {
     const val API_KEY = "e6c8bada64ea5356977e8966ec825784"
     const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
-    const val REQUEST_CODE = 5005
+    const val REQUEST_CODE = 10
     const val SETTING_SHARED = "Setting"
     const val LOCATION = "Location"
     const val LANGUAGE = "Language"
