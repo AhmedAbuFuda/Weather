@@ -243,6 +243,7 @@ class HomeFragment : Fragment() {
             unit,
             language
         )
+        viewModel.deleteCurrentWeather()
         lifecycleScope.launch {
             viewModel.weatherApi.collectLatest { result ->
                 when (result) {
@@ -259,7 +260,6 @@ class HomeFragment : Fragment() {
                         binding.hourCV.visibility = View.VISIBLE
                         binding.dailyCV.visibility = View.VISIBLE
                         binding.detailsCV.visibility = View.VISIBLE
-                        viewModel.deleteCurrentWeather()
                         viewModel.insertCurrentWeather(result.data)
                         drawScreen(result.data)
                         hourAdapter.submitList(result.data.list.subList(0, 8))

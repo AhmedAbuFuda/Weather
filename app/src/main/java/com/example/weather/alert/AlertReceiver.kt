@@ -106,7 +106,7 @@ class AlertReceiver : BroadcastReceiver() {
             description.text = "${context.resources.getString(R.string.`in`)} ${weather.city.name}, ${context.resources.getString(R.string.weather)} ${weather.list[0].weather[0].description} ${context.resources.getString(R.string.temper)} ${weather.list[0].main.temp.toInt()} ${Constants.UNIT} ${context.resources.getString(R.string.now)}"
         }
 
-        val mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
+        val mediaPlayer = MediaPlayer.create(context, R.raw.weather_alert)
         mediaPlayer.start()
         mediaPlayer.isLooping = true
         cancelBtn.setOnClickListener {

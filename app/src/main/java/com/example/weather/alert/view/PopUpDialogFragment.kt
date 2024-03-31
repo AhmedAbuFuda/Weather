@@ -155,12 +155,6 @@ class PopUpDialogFragment(val viewModel: AlertViewModel) : DialogFragment() {
         val intent = Intent(requireContext(), AlertReceiver::class.java)
         intent.putExtra("alert", alertWeather)
 
-        val pendingIntent = PendingIntent.getBroadcast(
-            requireContext(),
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val startCalendar = Calendar.getInstance()
@@ -181,6 +175,12 @@ class PopUpDialogFragment(val viewModel: AlertViewModel) : DialogFragment() {
 
         val differenceInMillis = abs(startCalendar.timeInMillis - endCalendar.timeInMillis)
 
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            differenceInMillis.toInt()+10,
+            intent,
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         Log.i("time", "createAlertReceiver: $differenceInMillis")
         alarmManager.set(
             AlarmManager.RTC_WAKEUP,
