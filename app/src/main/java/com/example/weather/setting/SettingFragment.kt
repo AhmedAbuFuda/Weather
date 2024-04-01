@@ -1,8 +1,10 @@
 package com.example.weather.setting
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -74,10 +76,12 @@ class SettingFragment : Fragment() {
         binding.languageRG.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener{ group, checkedId ->
             if (checkedId == binding.englishRB.id){
                 sharedPreference.edit().putString(Constants.LANGUAGE, Constants.ENGLISH).apply()
-                setLocal("en")
+                setLocale("en",resources)
+                startActivity(Intent(requireActivity(),MainActivity::class.java))
             }else if (checkedId == binding.arabicRB.id){
                 sharedPreference.edit().putString(Constants.LANGUAGE, Constants.ARABIC).apply()
-                setLocal("ar")
+                setLocale("ar",resources)
+                startActivity(Intent(requireActivity(),MainActivity::class.java))
             }
         })
         binding.windSpeedRG.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener{group, checkedId ->
@@ -142,7 +146,7 @@ class SettingFragment : Fragment() {
         }
     }
 
-    private fun setLocal(language: String) {
+    /*private fun setLocal(language: String) {
         val resources = resources
         val dm = resources.displayMetrics
         val config: Configuration = resources.configuration
@@ -157,6 +161,18 @@ class SettingFragment : Fragment() {
         }
         resources.updateConfiguration(config, dm)
         (requireActivity() as MainActivity).restart()
+    }*/
+
+    fun setLocale(languageCode: String, myResources: Resources) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+
+        val resources = myResources
+        val configuration = resources.configuration
+        configuration.setLocale(locale)
+
+        @Suppress("DEPRECATION")
+        resources.updateConfiguration(configuration, resources.displayMetrics)
     }
 
 
