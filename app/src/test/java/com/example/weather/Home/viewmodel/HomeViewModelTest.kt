@@ -2,17 +2,13 @@ package com.example.weather.Home.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.weather.model.APIState
 import com.example.weather.model.CurrentDBState
 import com.example.weather.model.FakeWeatherRepository
 import com.example.weather.model.WeatherResponse
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -49,6 +45,9 @@ class HomeViewModelTest{
 
     @Test
     fun getCurrentWeather_returnListNotNull()= runBlocking {
+        //Given
+        val weatherResponse = WeatherResponse()
+        viewModel.insertCurrentWeather(weatherResponse)
 
         //When
         viewModel.getCurrentWeather()
@@ -69,14 +68,18 @@ class HomeViewModelTest{
     fun insertCurrentWeather_weatherResponse_returnUnit() {
         //Given
         val weatherResponse = WeatherResponse()
+
         //When
-        val result = viewModel.insertCurrentWeather(weatherResponse)
+        val result =viewModel.insertCurrentWeather(weatherResponse)
 
         assertEquals(Unit,result)
     }
 
     @Test
     fun deleteCurrentWeather_returnUnit() {
+        //Given
+        val weatherResponse = WeatherResponse()
+        viewModel.insertCurrentWeather(weatherResponse)
 
         //When
         val result = viewModel.deleteCurrentWeather()

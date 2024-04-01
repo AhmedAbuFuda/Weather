@@ -38,6 +38,9 @@ class FavoriteViewModelTest{
 
     @Test
     fun getFavoritePlace_returnListNotNull()= runBlocking {
+        //Given
+        val favoritePlace = FavoritePlace(id = 2,41.158,35.564,"fuwwa")
+        viewModel.insertFavoritePlace(favoritePlace)
 
         //When
         viewModel.getFavoritePlace()
@@ -55,14 +58,22 @@ class FavoriteViewModelTest{
     }
 
     @Test
-    fun deleteFavoritePlace_returnUnit(){
+    fun deleteFavoritePlace_returnSize()= runBlocking {
         //Given
         val favoritePlace = FavoritePlace(id = 2,41.158,35.564,"fuwwa")
         viewModel.insertFavoritePlace(favoritePlace)
 
         //When
-        val result = viewModel.deleteFavoritePlace(favoritePlace.id)
+        viewModel.deleteFavoritePlace(favoritePlace.id)
+        val result = viewModel.favoriteDB.first()
+        var data = emptyList<FavoritePlace>()
+        when(result){
+            is PlaceDBState.Success ->
+                data = result.data
+            else ->{}
 
-        assertEquals(Unit, result)
+        }
+        //Then
+        assertThat(data.size,`is`(0))
     }
 }
