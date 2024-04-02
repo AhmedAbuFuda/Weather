@@ -28,6 +28,8 @@ interface WeatherDao{
 
     @Query("SELECT * FROM alertWeather")
     fun getAlertWeather(): Flow<List<AlertWeather>>
+    @Query("SELECT * FROM alertWeather WHERE id = :id")
+    suspend fun getAlertById(id : String) : AlertWeather
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAlert(alertWeather: AlertWeather)
     @Delete

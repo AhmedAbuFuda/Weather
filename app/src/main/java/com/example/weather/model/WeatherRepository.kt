@@ -20,6 +20,7 @@ interface WeatherRepository {
     suspend fun deleteFavoritePlace(id : Int)
 
     fun getAlertsWeather() : Flow<List<AlertWeather>>
+    suspend fun getAlertById(id: String): AlertWeather
     suspend fun insertAlert(alertWeather: AlertWeather)
     suspend fun deleteAlert(alertWeather: AlertWeather)
 }

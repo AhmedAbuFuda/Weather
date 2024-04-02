@@ -39,6 +39,10 @@ class WeatherLocalDataSourceImp(context : Context) : WeatherLocalDataSource {
         return dao.getAlertWeather()
     }
 
+    override suspend fun getAlertById(id: String): AlertWeather {
+        return dao.getAlertById(id)
+    }
+
     override suspend fun insertAlert(alertWeather: AlertWeather) {
         dao.insertAlert(alertWeather)
     }

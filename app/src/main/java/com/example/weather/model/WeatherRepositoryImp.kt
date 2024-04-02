@@ -61,6 +61,10 @@ class WeatherRepositoryImp private constructor(
         return weatherLocalDataSource.getAlertsWeather()
     }
 
+    override suspend fun getAlertById(id: String): AlertWeather {
+        return weatherLocalDataSource.getAlertById(id)
+    }
+
     override suspend fun insertAlert(alertWeather: AlertWeather) {
         return weatherLocalDataSource.insertAlert(alertWeather)
     }
