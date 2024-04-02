@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AlertReceiver : BroadcastReceiver() {
-
+    private var weatherAlert : AlertWeather = AlertWeather()
     private lateinit var sharedPreference: SharedPreferences
     override fun onReceive(context: Context, intent: Intent?) {
         val alertWeather = intent?.getSerializableExtra("alert") as AlertWeather
@@ -40,8 +40,16 @@ class AlertReceiver : BroadcastReceiver() {
             WeatherRemoteDataSourceImp.getInstance(),
             WeatherLocalDataSourceImp(context)
         )
-        getWeatherFromApi(context,alertWeather,repo)
-        deleteAlert(repo,alertWeather)
+        CoroutineScope(Dispatchers.IO).launch {
+            weatherAlert = repo.getAlertById(alertWeather.id)
+            Log.i("weather", "onReceive: "+weatherAlert.toString())
+
+            if (weatherAlert != null){
+                getWeatherFromApi(context,alertWeather,repo)
+                deleteAlert(repo,alertWeather)
+            }
+        }
+
     }
 
     private fun getWeatherFromApi(context: Context, alertWeather: AlertWeather, repo : WeatherRepositoryImp){

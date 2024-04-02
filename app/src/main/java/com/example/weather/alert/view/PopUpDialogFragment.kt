@@ -179,7 +179,7 @@ class PopUpDialogFragment(val viewModel: AlertViewModel) : DialogFragment() {
             requireContext(),
             differenceInMillis.toInt()+10,
             intent,
-            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         Log.i("time", "createAlertReceiver: $differenceInMillis")
         alarmManager.set(
