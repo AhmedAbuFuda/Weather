@@ -8,8 +8,11 @@ import com.example.weather.model.WeatherResponse
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -65,26 +68,29 @@ class HomeViewModelTest{
     }
 
     @Test
-    fun insertCurrentWeather_weatherResponse_returnUnit() {
+    fun insertCurrentWeather_weatherResponse_returnNotNull() {
         //Given
         val weatherResponse = WeatherResponse()
 
         //When
-        val result =viewModel.insertCurrentWeather(weatherResponse)
+        viewModel.insertCurrentWeather(weatherResponse)
 
-        assertEquals(Unit,result)
+        //Then
+        val result = viewModel.weatherDB.value
+        assertThat(result, not(nullValue()))
     }
 
     @Test
-    fun deleteCurrentWeather_returnUnit() {
+    fun deleteCurrentWeather_returnNotNull() {
         //Given
         val weatherResponse = WeatherResponse()
         viewModel.insertCurrentWeather(weatherResponse)
 
         //When
-        val result = viewModel.deleteCurrentWeather()
+        viewModel.deleteCurrentWeather()
+        val result = viewModel.weatherDB.value
 
         //Then
-        assertEquals(Unit,result)
+        assertThat(result, not(nullValue()))
     }
 }
