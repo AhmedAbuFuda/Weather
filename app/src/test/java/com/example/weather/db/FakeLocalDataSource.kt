@@ -40,6 +40,10 @@ class FakeLocalDataSource(
         TODO("Not yet implemented")
     }
 
+    override suspend fun getAlertById(id: String): AlertWeather {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun insertAlert(alertWeather: AlertWeather) {
         TODO("Not yet implemented")
     }
